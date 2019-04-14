@@ -26,7 +26,7 @@
 (require 's)
 (require 'dash)
 (require 'tablist)
-(require 'magit-popup)
+(require 'transient)
 
 (require 'docker-group)
 (require 'docker-utils)
@@ -198,14 +198,14 @@ and FLIP is a boolean to specify the sort order."
     (docker-machine-run "stop" (docker-machine-stop-arguments) it))
   (tablist-revert))
 
-(magit-define-popup docker-machine-env-popup
+(define-transient-command docker-machine-env ()
   "Popup for setting up environment variables."
   'docker-machine
   :man-page "docker-machine-env"
   :actions '((?E "Env" docker-machine-env-selection))
-  :setup-function #'docker-utils-setup-popup)
+  :setup-function #'docker-utils-setup-transient)
 
-(magit-define-popup docker-machine-ls-popup
+(define-transient-command docker-machine-ls ()
   "Popup for listing machines."
   'docker-machine
   :man-page "docker-machine-ls"
@@ -213,14 +213,14 @@ and FLIP is a boolean to specify the sort order."
                (?t "Timeout" "--timeout "))
   :actions   `((?l "List" ,(docker-utils-set-then-call 'docker-machine-ls-arguments 'tablist-revert))))
 
-(magit-define-popup docker-machine-restart-popup
+(define-transient-command docker-machine-restart ()
   "Popup for restarting machines."
   'docker-machine
   :man-page "docker-machine-restart"
   :actions '((?R "Restart" docker-machine-restart-selection))
-  :setup-function #'docker-utils-setup-popup)
+  :setup-function #'docker-utils-setup-transient)
 
-(magit-define-popup docker-machine-rm-popup
+(define-transient-command docker-machine-rm ()
   "Popup for removing machines."
   'docker-machine
   :man-page "docker-machine-rm"
@@ -228,44 +228,44 @@ and FLIP is a boolean to specify the sort order."
               (?y "Automatic yes" "-y"))
   :actions  '((?D "Remove" docker-machine-rm-selection))
   :default-arguments '("-y")
-  :setup-function #'docker-utils-setup-popup)
+  :setup-function #'docker-utils-setup-transient)
 
-(magit-define-popup docker-machine-start-popup
+(define-transient-command docker-machine-start ()
   "Popup for starting machines."
   'docker-machine
   :man-page "docker-machine-start"
   :actions  '((?S "Start" docker-machine-start-selection))
-  :setup-function #'docker-utils-setup-popup)
+  :setup-function #'docker-utils-setup-transient)
 
-(magit-define-popup docker-machine-stop-popup
+(define-transient-command docker-machine-stop ()
   "Popup for stoping machines."
   'docker-machine
   :man-page "docker-machine-stop"
   :actions '((?O "Stop" docker-machine-stop-selection))
-  :setup-function #'docker-utils-setup-popup)
+  :setup-function #'docker-utils-setup-transient)
 
-(magit-define-popup docker-machine-help-popup
+(define-transient-command docker-machine-help ()
   "Help popup for docker machine."
   'docker-machine
   :actions '("Docker machines help"
              (?C "Create"     docker-machine-create)
-             (?D "Remove"     docker-machine-rm-popup)
-             (?E "Env"        docker-machine-env-popup)
-             (?O "Stop"       docker-machine-stop-popup)
-             (?R "Restart"    docker-machine-restart-popup)
-             (?S "Start"      docker-machine-start-popup)
-             (?l "List"       docker-machine-ls-popup)))
+             (?D "Remove"     docker-machine-rm)
+             (?E "Env"        docker-machine-env)
+             (?O "Stop"       docker-machine-stop)
+             (?R "Restart"    docker-machine-restart)
+             (?S "Start"      docker-machine-start)
+             (?l "List"       docker-machine-ls)))
 
 (defvar docker-machine-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map "?" 'docker-machine-help-popup)
+    (define-key map "?" 'docker-machine-help)
     (define-key map "C" 'docker-machine-create)
-    (define-key map "D" 'docker-machine-rm-popup)
-    (define-key map "E" 'docker-machine-env-popup)
-    (define-key map "O" 'docker-machine-stop-popup)
-    (define-key map "R" 'docker-machine-restart-popup)
-    (define-key map "S" 'docker-machine-start-popup)
-    (define-key map "l" 'docker-machine-ls-popup)
+    (define-key map "D" 'docker-machine-rm)
+    (define-key map "E" 'docker-machine-env)
+    (define-key map "O" 'docker-machine-stop)
+    (define-key map "R" 'docker-machine-restart)
+    (define-key map "S" 'docker-machine-start)
+    (define-key map "l" 'docker-machine-ls)
     map)
   "Keymap for `docker-machine-mode'.")
 

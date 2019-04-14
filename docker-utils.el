@@ -26,7 +26,7 @@
 (require 'dash)
 (require 'tramp)
 (require 'tablist)
-(require 'magit-popup)
+(require 'transient)
 
 (defun docker-utils-get-marked-items ()
   "Get the marked items data from `tabulated-list-entries'."
@@ -43,7 +43,7 @@
   "Get the id part of `docker-utils-get-marked-items'."
   (-map #'car (docker-utils-get-marked-items)))
 
-(defun docker-utils-setup-popup (val def)
+(defun docker-utils-setup-transient-popup (val def)
   "Ensure something is selected then pass VAL and DEF to `magit-popup-default-setup'."
   (magit-with-pre-popup-buffer (docker-utils-select-if-empty))
   (magit-popup-default-setup val def))

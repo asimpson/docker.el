@@ -27,7 +27,7 @@
 (require 'dash)
 (require 'json)
 (require 'tablist)
-(require 'magit-popup)
+(require 'transient)
 
 (require 'docker-group)
 (require 'docker-process)
@@ -163,14 +163,14 @@ Do not delete untagged parents when NO-PRUNE is set."
     (docker-tag it (read-string (format "Tag for %s: " it))))
   (tablist-revert))
 
-(magit-define-popup docker-image-inspect-popup
+(define-transient-command docker-image-inspect ()
   "Popup for inspecting images."
   'docker-image
   :man-page "docker-inspect"
   :actions  '((?I "Inspect" docker-image-inspect-selection))
-  :setup-function #'docker-utils-setup-popup)
+  :setup-function #'docker-utils-setup-transient)
 
-(magit-define-popup docker-image-ls-popup
+(define-transient-command docker-image-ls ()
   "Popup for listing images."
   'docker-image
   :man-page "docker-image-ls"
@@ -180,31 +180,31 @@ Do not delete untagged parents when NO-PRUNE is set."
   :options   '((?f "Filter" "--filter "))
   :actions   `((?l "List" ,(docker-utils-set-then-call 'docker-image-ls-arguments 'tablist-revert))))
 
-(magit-define-popup docker-image-pull-popup
+(define-transient-command docker-image-pull ()
   "Popup for pulling images."
   'docker-image
   :man-page "docker-pull"
   :switches '((?a "All" "-a"))
   :actions  '((?F "Pull" docker-image-pull-selection))
-  :setup-function #'docker-utils-setup-popup)
+  :setup-function #'docker-utils-setup-transient)
 
-(magit-define-popup docker-image-push-popup
+(define-transient-command docker-image-push ()
   "Popup for pushing images."
   'docker-image
   :man-page "docker-push"
   :actions  '((?P "Push" docker-image-push-selection))
-  :setup-function #'docker-utils-setup-popup)
+  :setup-function #'docker-utils-setup-transient)
 
-(magit-define-popup docker-image-rm-popup
+(define-transient-command docker-image-rm ()
   "Popup for removing images."
   'docker-image
   :man-page "docker-rmi"
   :switches '((?f "Force" "-f")
               (?n "Don't prune" "--no-prune"))
   :actions  '((?D "Remove" docker-image-rm-selection))
-  :setup-function #'docker-utils-setup-popup)
+  :setup-function #'docker-utils-setup-transient)
 
-(magit-define-popup docker-image-run-popup
+(define-transient-command docker-image-run ()
   "Popup for running images."
   'docker-image
   :man-page "docker-run"
@@ -225,30 +225,30 @@ Do not delete untagged parents when NO-PRUNE is set."
               (?v "volume" "-v ")
               (?w "workdir" "-w "))
   :actions  '((?R "Run images" docker-image-run-selection))
-  :setup-function #'docker-utils-setup-popup)
+  :setup-function #'docker-utils-setup-transient)
 
-(magit-define-popup docker-image-help-popup
+(define-transient-command docker-image-help ()
   "Help popup for docker images."
   'docker-image
   :actions '("Docker images help"
-             (?D "Remove"  docker-image-rm-popup)
-             (?F "Pull"    docker-image-pull-popup)
-             (?I "Inspect" docker-image-inspect-popup)
-             (?P "Push"    docker-image-push-popup)
-             (?R "Run"     docker-image-run-popup)
+             (?D "Remove"  docker-image-rm)
+             (?F "Pull"    docker-image-pull)
+             (?I "Inspect" docker-image-inspect)
+             (?P "Push"    docker-image-push)
+             (?R "Run"     docker-image-run)
              (?T "Tag"     docker-image-tag-selection)
-             (?l "List"    docker-image-ls-popup)))
+             (?l "List"    docker-image-ls)))
 
 (defvar docker-image-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map "?" 'docker-image-help-popup)
-    (define-key map "D" 'docker-image-rm-popup)
-    (define-key map "F" 'docker-image-pull-popup)
-    (define-key map "I" 'docker-image-inspect-popup)
-    (define-key map "P" 'docker-image-push-popup)
-    (define-key map "R" 'docker-image-run-popup)
+    (define-key map "?" 'docker-image-help)
+    (define-key map "D" 'docker-image-rm)
+    (define-key map "F" 'docker-image-pull)
+    (define-key map "I" 'docker-image-inspect)
+    (define-key map "P" 'docker-image-push)
+    (define-key map "R" 'docker-image-run)
     (define-key map "T" 'docker-image-tag-selection)
-    (define-key map "l" 'docker-image-ls-popup)
+    (define-key map "l" 'docker-image-ls)
     map)
   "Keymap for `docker-image-mode'.")
 

@@ -28,7 +28,7 @@
 (require 'dash)
 (require 'json)
 (require 'tablist)
-(require 'magit-popup)
+(require 'transient)
 
 (require 'docker-group)
 (require 'docker-process)
@@ -358,60 +358,60 @@ TIMEOUT is the number of seconds to wait for the container to stop before killin
     (docker-run "unpause" (docker-container-pause-arguments) it))
   (tablist-revert))
 
-(magit-define-popup docker-container-attach-popup
+(define-transient-command docker-container-attach ()
   "Popup for attaching to containers."
   'docker-container
   :man-page "docker-attach"
   :switches '((?n "No STDIN" "--no-stdin"))
   :options  '((?d "Key sequence for detaching" "--detach-keys "))
   :actions  '((?a "Attach" docker-container-attach-selection))
-  :setup-function #'docker-utils-setup-popup)
+  :setup-function #'docker-utils-setup-transient)
 
-(magit-define-popup docker-container-cp-popup
+(define-transient-command docker-container-cp ()
   "Popup for copying files from/to containers."
   'docker-container
   :man-page "docker-cp"
   :actions  '((?f "Copy From" docker-container-cp-from-selection)
               (?t "Copy To" docker-container-cp-to-selection))
-  :setup-function #'docker-utils-setup-popup)
+  :setup-function #'docker-utils-setup-transient)
 
-(magit-define-popup docker-container-diff-popup
+(define-transient-command docker-container-diff ()
   "Popup for showing containers diffs."
   'docker-container
   :man-page "docker-diff"
   :actions  '((?d "Diff" docker-container-diff-selection))
-  :setup-function #'docker-utils-setup-popup)
+  :setup-function #'docker-utils-setup-transient)
 
-(magit-define-popup docker-container-find-file-popup
+(define-transient-command docker-container-find-file ()
   "Popup for opening containers files."
   'docker-container
   :actions  '((?f "Open file" docker-container-find-file-selection))
-  :setup-function #'docker-utils-setup-popup)
+  :setup-function #'docker-utils-setup-transient)
 
-(magit-define-popup docker-container-inspect-popup
+(define-transient-command docker-container-inspect ()
   "Popup for inspecting containers."
   'docker-container
   :man-page "docker-inspect"
   :actions  '((?I "Inspect" docker-container-inspect-selection))
-  :setup-function #'docker-utils-setup-popup)
+  :setup-function #'docker-utils-setup-transient)
 
-(magit-define-popup docker-container-kill-popup
+(define-transient-command docker-container-kill ()
   "Popup for kill signaling containers"
   'docker-container
   :man-page "docker-kill"
   :options  '((?s "Signal" "-s "))
   :actions  '((?K "Kill" docker-container-kill-selection))
-  :setup-function #'docker-utils-setup-popup)
+  :setup-function #'docker-utils-setup-transient)
 
-(magit-define-popup docker-container-logs-popup
+(define-transient-command docker-container-logs ()
   "Popup for showing containers logs."
   'docker-container
   :man-page "docker-logs"
   :switches '((?f "Follow" "-f"))
   :actions  '((?L "Logs" docker-container-logs-selection))
-  :setup-function #'docker-utils-setup-popup)
+  :setup-function #'docker-utils-setup-transient)
 
-(magit-define-popup docker-container-ls-popup
+(define-transient-command docker-container-ls ()
   "Popup for listing containers."
   'docker-container
   :man-page "docker-container-ls"
@@ -422,90 +422,90 @@ TIMEOUT is the number of seconds to wait for the container to stop before killin
                (?n "Last" "--last "))
   :actions   `((?l "List" ,(docker-utils-set-then-call 'docker-container-ls-arguments 'tablist-revert))))
 
-(magit-define-popup docker-container-pause-popup
+(define-transient-command docker-container-pause ()
   "Popup for pauseing containers."
   'docker-container
   :man-page "docker-pause"
   :actions  '((?P "Pause" docker-container-pause-selection)
               (?U "Unpause" docker-container-unpause-selection))
-  :setup-function #'docker-utils-setup-popup)
+  :setup-function #'docker-utils-setup-transient)
 
-(magit-define-popup docker-container-restart-popup
+(define-transient-command docker-container-restart ()
   "Popup for restarting containers."
   'docker-container
   :man-page "docker-restart"
   :options '((?t "Timeout" "-t "))
   :actions '((?R "Restart" docker-container-restart-selection))
-  :setup-function #'docker-utils-setup-popup)
+  :setup-function #'docker-utils-setup-transient)
 
-(magit-define-popup docker-container-rm-popup
+(define-transient-command docker-container-rm ()
   "Popup for removing containers."
   'docker-container
   :man-page "docker-rm"
   :switches '((?f "Force" "-f")
               (?v "Volumes" "-v"))
   :actions  '((?D "Remove" docker-container-rm-selection))
-  :setup-function #'docker-utils-setup-popup)
+  :setup-function #'docker-utils-setup-transient)
 
-(magit-define-popup docker-container-shell-popup
+(define-transient-command docker-container-shell ()
   "Popup for doing M-x `shell'/`eshell' to containers."
   'docker-container
   :actions  '((?b "Shell" docker-container-shell-selection)
               (?e "Eshell" docker-container-eshell-selection))
-  :setup-function #'docker-utils-setup-popup)
+  :setup-function #'docker-utils-setup-transient)
 
-(magit-define-popup docker-container-start-popup
+(define-transient-command docker-container-start ()
   "Popup for starting containers."
   'docker-container
   :man-page "docker-start"
   :actions  '((?S "Start" docker-container-start-selection))
-  :setup-function #'docker-utils-setup-popup)
+  :setup-function #'docker-utils-setup-transient)
 
-(magit-define-popup docker-container-stop-popup
+(define-transient-command docker-container-stop ()
   "Popup for stoping containers."
   'docker-container
   :man-page "docker-stop"
   :options '((?t "Timeout" "-t "))
   :actions '((?O "Stop" docker-container-stop-selection))
-  :setup-function #'docker-utils-setup-popup)
+  :setup-function #'docker-utils-setup-transient)
 
-(magit-define-popup docker-container-help-popup
+(define-transient-command docker-container-help ()
   "Help popup for docker containers."
   'docker-container
   :actions '("Docker containers help"
-             (?C "Copy"       docker-container-cp-popup)
-             (?D "Remove"     docker-container-rm-popup)
-             (?I "Inspect"    docker-container-inspect-popup)
-             (?K "Kill"       docker-container-kill-popup)
-             (?L "Logs"       docker-container-logs-popup)
-             (?O "Stop"       docker-container-stop-popup)
-             (?P "Pause"      docker-container-pause-popup)
-             (?R "Restart"    docker-container-restart-popup)
-             (?S "Start"      docker-container-start-popup)
-             (?a "Attach"     docker-container-attach-popup)
-             (?b "Shell"      docker-container-shell-popup)
-             (?d "Diff"       docker-container-diff-popup)
-             (?f "Find file"  docker-container-find-file-popup)
-             (?l "List"       docker-container-ls-popup)
+             (?C "Copy"       docker-container-cp)
+             (?D "Remove"     docker-container-rm)
+             (?I "Inspect"    docker-container-inspect)
+             (?K "Kill"       docker-container-kill)
+             (?L "Logs"       docker-container-logs)
+             (?O "Stop"       docker-container-stop)
+             (?P "Pause"      docker-container-pause)
+             (?R "Restart"    docker-container-restart)
+             (?S "Start"      docker-container-start)
+             (?a "Attach"     docker-container-attach)
+             (?b "Shell"      docker-container-shell)
+             (?d "Diff"       docker-container-diff)
+             (?f "Find file"  docker-container-find-file)
+             (?l "List"       docker-container-ls)
              (?r "Rename"     docker-container-rename-selection)))
 
 (defvar docker-container-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map "?" 'docker-container-help-popup)
-    (define-key map "C" 'docker-container-cp-popup)
-    (define-key map "D" 'docker-container-rm-popup)
-    (define-key map "I" 'docker-container-inspect-popup)
-    (define-key map "K" 'docker-container-kill-popup)
-    (define-key map "L" 'docker-container-logs-popup)
-    (define-key map "O" 'docker-container-stop-popup)
-    (define-key map "P" 'docker-container-pause-popup)
-    (define-key map "R" 'docker-container-restart-popup)
-    (define-key map "S" 'docker-container-start-popup)
-    (define-key map "a" 'docker-container-attach-popup)
-    (define-key map "b" 'docker-container-shell-popup)
-    (define-key map "d" 'docker-container-diff-popup)
-    (define-key map "f" 'docker-container-find-file-popup)
-    (define-key map "l" 'docker-container-ls-popup)
+    (define-key map "?" 'docker-container-help)
+    (define-key map "C" 'docker-container-cp)
+    (define-key map "D" 'docker-container-rm)
+    (define-key map "I" 'docker-container-inspect)
+    (define-key map "K" 'docker-container-kill)
+    (define-key map "L" 'docker-container-logs)
+    (define-key map "O" 'docker-container-stop)
+    (define-key map "P" 'docker-container-pause)
+    (define-key map "R" 'docker-container-restart)
+    (define-key map "S" 'docker-container-start)
+    (define-key map "a" 'docker-container-attach)
+    (define-key map "b" 'docker-container-shell)
+    (define-key map "d" 'docker-container-diff)
+    (define-key map "f" 'docker-container-find-file)
+    (define-key map "l" 'docker-container-ls)
     (define-key map "r" 'docker-container-rename-selection)
     map)
   "Keymap for `docker-container-mode'.")

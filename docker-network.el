@@ -27,7 +27,7 @@
 (require 'dash)
 (require 'json)
 (require 'tablist)
-(require 'magit-popup)
+(require 'transient)
 
 (require 'docker-group)
 (require 'docker-process)
@@ -86,7 +86,7 @@ and FLIP is a boolean to specify the sort order."
     (docker-run "network rm" it))
   (tablist-revert))
 
-(magit-define-popup docker-network-ls-popup
+(define-transient-command docker-network-ls ()
   "Popup for listing networks."
   'docker-network
   :man-page "docker-network-ls"
@@ -94,25 +94,25 @@ and FLIP is a boolean to specify the sort order."
   :options   '((?f "Filter" "--filter "))
   :actions   `((?l "List" ,(docker-utils-set-then-call 'docker-network-ls-arguments 'tablist-revert))))
 
-(magit-define-popup docker-network-rm-popup
+(define-transient-command docker-network-rm ()
   "Popup for removing networks."
   'docker-network
   :man-page "docker-network-rm"
   :actions  '((?D "Remove" docker-network-rm-selection))
   :setup-function #'docker-utils-popup-setup)
 
-(magit-define-popup docker-network-help-popup
+(define-transient-command docker-network-help ()
   "Help popup for docker networks."
   'docker-network
   :actions '("Docker networks help"
-             (?D "Remove"     docker-network-rm-popup)
-             (?l "List"       docker-network-ls-popup)))
+             (?D "Remove"     docker-network-rm)
+             (?l "List"       docker-network-ls)))
 
 (defvar docker-network-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map "?" 'docker-network-help-popup)
-    (define-key map "D" 'docker-network-rm-popup)
-    (define-key map "l" 'docker-network-ls-popup)
+    (define-key map "?" 'docker-network-help)
+    (define-key map "D" 'docker-network-rm)
+    (define-key map "l" 'docker-network-ls)
     map)
   "Keymap for `docker-network-mode'.")
 

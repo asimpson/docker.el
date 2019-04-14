@@ -26,7 +26,7 @@
 (require 's)
 (require 'dash)
 (require 'tablist)
-(require 'magit-popup)
+(require 'transient)
 
 (require 'docker-group)
 (require 'docker-utils)
@@ -195,7 +195,7 @@
      (interactive (list (,(intern (format "%s-arguments" command)))))
      (,command nil args)))
 
-(magit-define-popup docker-compose-build-popup
+(define-transient-command docker-compose-build ()
   "Popup for \"docker-compose build\"."
   'docker-compose
   :man-page "docker-compose build"
@@ -209,7 +209,7 @@
   :actions  `((?B "Build" docker-compose-build)
               (?A "All services" ,(docker-compose--all docker-compose-build))))
 
-(magit-define-popup docker-compose-create-popup
+(define-transient-command docker-compose-create ()
   "Popup for \"docker-compose create\"."
   'docker-compose
   :man-page "docker-compose create"
@@ -219,7 +219,7 @@
   :actions  `((?C "Create" docker-compose-create)
               (?A "All services" ,(docker-compose--all docker-compose-create))))
 
-(magit-define-popup docker-compose-down-popup
+(define-transient-command docker-compose-down ()
   "Popup for \"docker-compose down\"."
   'docker-compose
   :man-page "docker-compose down"
@@ -229,7 +229,7 @@
   :actions  `((?W "Down" docker-compose-down)
               (?A "All services" ,(docker-compose--all docker-compose-down))))
 
-(magit-define-popup docker-compose-exec-popup
+(define-transient-command docker-compose-exec ()
   "Popup for \"docker-compose exec\"."
   'docker-compose
   :man-page "docker-compose exec"
@@ -241,7 +241,7 @@
               (?w "Workdir" "--workdir "))
   :actions  '((?E "Exec" docker-compose-exec)))
 
-(magit-define-popup docker-compose-logs-popup
+(define-transient-command docker-compose-logs ()
   "Popup for \"docker-compose logs\"."
   'docker-compose
   :man-page "docker-compose logs"
@@ -252,7 +252,7 @@
   :actions  `((?L "Logs" docker-compose-logs)
               (?A "All services" ,(docker-compose--all docker-compose-logs))))
 
-(magit-define-popup docker-compose-pull-popup
+(define-transient-command docker-compose-pull ()
   "Popup for \"docker-compose pull\"."
   'docker-compose
   :man-page "docker-compose pull"
@@ -262,7 +262,7 @@
   :actions  `((?F "Pull" docker-compose-pull)
               (?A "All services" ,(docker-compose--all docker-compose-pull))))
 
-(magit-define-popup docker-compose-push-popup
+(define-transient-command docker-compose-push ()
   "Popup for \"docker-compose push\"."
   'docker-compose
   :man-page "docker-compose push"
@@ -270,7 +270,7 @@
   :actions  `((?P "Push" docker-compose-push)
               (?A "All services" ,(docker-compose--all docker-compose-push))))
 
-(magit-define-popup docker-compose-restart-popup
+(define-transient-command docker-compose-restart ()
   "Popup for \"docker-compose restart\"."
   'docker-compose
   :man-page "docker-compose restart"
@@ -278,7 +278,7 @@
   :actions  `((?T "Restart" docker-compose-restart)
               (?A "All services" ,(docker-compose--all docker-compose-restart))))
 
-(magit-define-popup docker-compose-rm-popup
+(define-transient-command docker-compose-rm ()
   "Popup for \"docker-compose rm\"."
   'docker-compose
   :man-page "docker-compose rm"
@@ -288,7 +288,7 @@
   :actions  `((?D "Remove" docker-compose-rm)
               (?A "All services" ,(docker-compose--all docker-compose-rm))))
 
-(magit-define-popup docker-compose-run-popup
+(define-transient-command docker-compose-run ()
   "Popup for \"docker-compose run\"."
   'docker-compose
   :man-page "docker-compose run"
@@ -305,14 +305,14 @@
               (?w "Workdir" "--workdir "))
   :actions  '((?R "Run" docker-compose-run)))
 
-(magit-define-popup docker-compose-start-popup
+(define-transient-command docker-compose-start ()
   "Popup for \"docker-compose start\"."
   'docker-compose
   :man-page "docker-compose start"
   :actions  `((?S "Start" docker-compose-start)
               (?A "All services" ,(docker-compose--all docker-compose-start))))
 
-(magit-define-popup docker-compose-stop-popup
+(define-transient-command docker-compose-stop ()
   "Popup for \"docker-compose stop\"."
   'docker-compose
   :man-page "docker-compose stop"
@@ -320,7 +320,7 @@
   :actions  `((?O "Stop" docker-compose-stop)
               (?A "All services" ,(docker-compose--all docker-compose-stop))))
 
-(magit-define-popup docker-compose-up-popup
+(define-transient-command docker-compose-up ()
   "Popup for \"docker-compose up\"."
   'docker-compose
   :man-page "docker-compose up"
@@ -348,19 +348,19 @@
               (?l "Log level" "--log-level " docker-compose-read-log-level)
               (?p "Project name" "--project-name "))
   :actions  `("Docker-compose"
-              (?B "Build"      ,(docker-utils-set-then-call 'docker-compose-arguments 'docker-compose-build-popup))
-              (?C "Create"     ,(docker-utils-set-then-call 'docker-compose-arguments 'docker-compose-create-popup))
-              (?D "Remove"     ,(docker-utils-set-then-call 'docker-compose-arguments 'docker-compose-rm-popup))
-              (?E "Exec"       ,(docker-utils-set-then-call 'docker-compose-arguments 'docker-compose-exec-popup))
-              (?F "Pull"       ,(docker-utils-set-then-call 'docker-compose-arguments 'docker-compose-pull-popup))
-              (?L "Logs"       ,(docker-utils-set-then-call 'docker-compose-arguments 'docker-compose-logs-popup))
-              (?O "Stop"       ,(docker-utils-set-then-call 'docker-compose-arguments 'docker-compose-stop-popup))
-              (?P "Push"       ,(docker-utils-set-then-call 'docker-compose-arguments 'docker-compose-push-popup))
-              (?R "Run"        ,(docker-utils-set-then-call 'docker-compose-arguments 'docker-compose-run-popup))
-              (?S "Start"      ,(docker-utils-set-then-call 'docker-compose-arguments 'docker-compose-start-popup))
-              (?T "Restart"    ,(docker-utils-set-then-call 'docker-compose-arguments 'docker-compose-restart-popup))
-              (?U "Up"         ,(docker-utils-set-then-call 'docker-compose-arguments 'docker-compose-up-popup))
-              (?W "Down"       ,(docker-utils-set-then-call 'docker-compose-arguments 'docker-compose-down-popup))))
+              (?B "Build"      ,(docker-utils-set-then-call 'docker-compose-arguments 'docker-compose-build))
+              (?C "Create"     ,(docker-utils-set-then-call 'docker-compose-arguments 'docker-compose-create))
+              (?D "Remove"     ,(docker-utils-set-then-call 'docker-compose-arguments 'docker-compose-rm))
+              (?E "Exec"       ,(docker-utils-set-then-call 'docker-compose-arguments 'docker-compose-exec))
+              (?F "Pull"       ,(docker-utils-set-then-call 'docker-compose-arguments 'docker-compose-pull))
+              (?L "Logs"       ,(docker-utils-set-then-call 'docker-compose-arguments 'docker-compose-logs))
+              (?O "Stop"       ,(docker-utils-set-then-call 'docker-compose-arguments 'docker-compose-stop))
+              (?P "Push"       ,(docker-utils-set-then-call 'docker-compose-arguments 'docker-compose-push))
+              (?R "Run"        ,(docker-utils-set-then-call 'docker-compose-arguments 'docker-compose-run))
+              (?S "Start"      ,(docker-utils-set-then-call 'docker-compose-arguments 'docker-compose-start))
+              (?T "Restart"    ,(docker-utils-set-then-call 'docker-compose-arguments 'docker-compose-restart))
+              (?U "Up"         ,(docker-utils-set-then-call 'docker-compose-arguments 'docker-compose-up))
+              (?W "Down"       ,(docker-utils-set-then-call 'docker-compose-arguments 'docker-compose-down))))
 
 (provide 'docker-compose)
 

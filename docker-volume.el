@@ -27,7 +27,7 @@
 (require 'dash)
 (require 'json)
 (require 'tablist)
-(require 'magit-popup)
+(require 'transient)
 
 (require 'docker-group)
 (require 'docker-process)
@@ -99,34 +99,34 @@ and FLIP is a boolean to specify the sort order."
     (docker-run "volume rm" it))
   (tablist-revert))
 
-(magit-define-popup docker-volume-ls-popup
+(define-transient-command docker-volume-ls ()
   "Popup for listing volumes."
   'docker-volume
   :man-page "docker-volume-ls"
   :options   '((?f "Filter" "--filter "))
   :actions   `((?l "List" ,(docker-utils-set-then-call 'docker-volume-ls-arguments 'tablist-revert))))
 
-(magit-define-popup docker-volume-rm-popup
+(define-transient-command docker-volume-rm ()
   "Popup for removing volumes."
   'docker-volume
   :man-page "docker-volume-rm"
   :actions  '((?D "Remove" docker-volume-rm-selection))
-  :setup-function #'docker-utils-setup-popup)
+  :setup-function #'docker-utils-setup-transient)
 
-(magit-define-popup docker-volume-help-popup
+(define-transient-command docker-volume-help ()
   "Help popup for docker volumes."
   'docker-volume
   :actions '("Docker volumes help"
-             (?D "Remove"     docker-volume-rm-popup)
+             (?D "Remove"     docker-volume-rm)
              (?d "Dired"      docker-volume-dired-selection)
-             (?l "List"       docker-volume-ls-popup)))
+             (?l "List"       docker-volume-ls)))
 
 (defvar docker-volume-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map "?" 'docker-volume-help-popup)
-    (define-key map "D" 'docker-volume-rm-popup)
+    (define-key map "?" 'docker-volume-help)
+    (define-key map "D" 'docker-volume-rm)
     (define-key map "d" 'docker-volume-dired-selection)
-    (define-key map "l" 'docker-volume-ls-popup)
+    (define-key map "l" 'docker-volume-ls)
     map)
   "Keymap for `docker-volume-mode'.")
 
